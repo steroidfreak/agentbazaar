@@ -10,9 +10,12 @@ A full-stack platform for uploading, sharing, rating, and copying `agent.md` fil
 
 ## Backend setup (`server/`)
 1. Copy `.env.example` to `.env` and set values:
-   - `MONGODB_URI` – connection string
-   - `JWT_SECRET` – strong random string
-   - `YOUTUBE_VIDEO_IDS` – comma-separated list of video IDs for the weekly spotlight
+   - `MONGODB_URI` - connection string
+   - `JWT_SECRET` - strong random string
+   - `YOUTUBE_VIDEO_IDS` - comma-separated list of video IDs for the weekly spotlight
+   - `OPENAI_API_KEY` - secret key used to contact OpenAI for metadata generation
+   - `METADATA_MODEL` - (optional) model name for metadata generation, defaults to `gpt-4o-mini`
+   - `METADATA_TEMPERATURE` - (optional) sampling temperature, defaults to `0.1`
 2. Install dependencies:
    ```bash
    cd server
@@ -23,6 +26,7 @@ A full-stack platform for uploading, sharing, rating, and copying `agent.md` fil
    npm run dev
    ```
    The API listens on `http://localhost:5000` by default.
+   Uploads automatically call the metadata helper (see `OpenAIAgent.md`) whenever `OPENAI_API_KEY` is configured, deriving titles, descriptions, and tags from the uploaded markdown content.
 
 ## Frontend setup (`client/`)
 1. Install dependencies:
@@ -56,3 +60,9 @@ A full-stack platform for uploading, sharing, rating, and copying `agent.md` fil
 - Add email verification before allowing uploads.
 - Hook the copy/download analytics into a dashboard provider for richer charts.
 - Replace in-memory featured caching with Redis if you scale to multiple API instances.
+
+
+
+
+
+

@@ -2,16 +2,21 @@ import fs from 'fs/promises';
 import path from 'path';
 import AgentFile from '../models/AgentFile.js';
 import Review from '../models/Review.js';
+import { generateMetadataFromAgent } from '../services/metadataService.js';
 
 function normalizeTags(tags) {
   if (!tags) return [];
-  if (Array.isArray(tags)) {
-    return tags.filter(Boolean).map((tag) => tag.trim().toLowerCase());
-  }
-  return tags
-    .split(',')
-    .map((tag) => tag.trim().toLowerCase())
+
+  const values = Array.isArray(tags)
+    ? tags
+    : String(tags)
+        .split(/[\,\r\n]/);
+
+  const normalized = values
+    .map((tag) => (tag == null ? '' : String(tag).trim().toLowerCase()))
     .filter(Boolean);
+
+  return Array.from(new Set(normalized));
 }
 
 export async function uploadAgentFile(req, res) {
@@ -19,19 +24,39 @@ export async function uploadAgentFile(req, res) {
     if (!req.file) {
       return res.status(400).json({ message: 'No file uploaded' });
     }
-
-    const { title, description, tags } = req.body;
-    if (!title) {
-      return res.status(400).json({ message: 'Title is required' });
-    }
-
     const filePath = req.file.path;
     const rawContent = await fs.readFile(filePath, 'utf-8');
+    const { title: requestedTitle, description: requestedDescription, tags: requestedTags } = req.body;
+
+    let metadata;
+    try {
+      metadata = await generateMetadataFromAgent(rawContent);
+    } catch (metadataError) {
+      console.error('Metadata agent error:', metadataError.message);
+      metadata = null;
+    }
+
+    const fileStem = path.basename(req.file.originalname, path.extname(req.file.originalname));
+    const derivedTitle = fileStem ? fileStem.replace(/[-_]+/g, ' ').trim() : '';
+
+    const titleCandidates = [metadata?.title, requestedTitle, derivedTitle, 'Untitled Agent'];
+    let finalTitle = titleCandidates.find((value) => typeof value === 'string' && value.trim());
+    finalTitle = finalTitle ? finalTitle.trim() : 'Untitled Agent';
+    if (finalTitle.length > 120) {
+      finalTitle = finalTitle.slice(0, 120).trim();
+    }
+
+    let finalDescription = (metadata?.description ?? requestedDescription ?? '').trim();
+    if (finalDescription.length > 400) {
+      finalDescription = finalDescription.slice(0, 400).trim();
+    }
+
+    const finalTags = normalizeTags(metadata?.tags ?? requestedTags);
 
     const agentFile = await AgentFile.create({
-      title,
-      description,
-      tags: normalizeTags(tags),
+      title: finalTitle,
+      description: finalDescription || undefined,
+      tags: finalTags,
       filePath: path.relative(process.cwd(), filePath).replace(/\\/g, '/'),
       content: rawContent,
       owner: req.user._id
@@ -191,3 +216,10 @@ export async function getUserDashboard(req, res) {
     res.status(500).json({ message: 'Failed to fetch dashboard data' });
   }
 }
+
+
+
+
+
+
+
