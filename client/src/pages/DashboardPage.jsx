@@ -30,32 +30,32 @@ export default function DashboardPage() {
   }
 
   if (loading || !data) {
-    return <LoadingState label="Crunching metrics..." />;
+    return <LoadingState label="Crunching metrics" />;
   }
 
   const { summary, files } = data;
 
   return (
-    <main style={{ display: 'grid', gap: '2rem' }}>
-      <section className="banner">
+    <main>
+      <section className="banner dos-section">
         <div>
           <h1 style={{ margin: 0 }}>Welcome back, @{user?.username}</h1>
-          <p style={{ margin: '0.3rem 0', color: 'var(--text-secondary)' }}>
+          <p className="dos-notice" style={{ margin: '0.3rem 0' }}>
             Track how your agents perform across the bazaar.
           </p>
         </div>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(160px, 1fr))', gap: '1rem' }}>
+        <div className="dos-metric-grid">
           <Metric label="Uploads" value={summary.totalFiles} />
           <Metric label="Total Views" value={summary.totalViews} />
           <Metric label="Copies" value={summary.totalCopies} />
-          <Metric label="Avg Rating" value={summary.averageRating || '—'} />
+          <Metric label="Avg Rating" value={summary.averageRating || ''} />
         </div>
       </section>
 
-      <section style={{ display: 'grid', gap: '1.2rem' }}>
+      <section className="glass-panel dos-section">
         <header>
           <h2 style={{ marginBottom: '0.3rem' }}>Your agents</h2>
-          <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Sorted by most recent uploads.</p>
+          <p className="dos-notice" style={{ margin: 0 }}>Sorted by most recent uploads.</p>
         </header>
         <div className="card-grid">
           {files.map((agent) => (
@@ -69,11 +69,9 @@ export default function DashboardPage() {
 
 function Metric({ label, value }) {
   return (
-    <div className="glass-panel" style={{ padding: '1.4rem', display: 'grid', gap: '0.4rem' }}>
-      <span style={{ color: 'var(--text-secondary)', fontSize: '0.85rem', letterSpacing: '0.08em', textTransform: 'uppercase' }}>
-        {label}
-      </span>
-      <strong style={{ fontSize: '1.6rem' }}>{value}</strong>
+    <div className="glass-panel dos-metric">
+      <span className="dos-metric__label">{label}</span>
+      <strong className="dos-metric__value">{value}</strong>
     </div>
   );
 }

@@ -5,29 +5,28 @@ export default function FeaturedShowcase({ featured }) {
   const { agent, video } = featured ?? {};
 
   return (
-    <section className="banner" style={{ marginBottom: '2rem' }}>
-      <header>
-        <h2 style={{ margin: 0, fontSize: '1.6rem' }}>Weekly Highlights</h2>
-        <p style={{ margin: '0.3rem 0', color: 'var(--text-secondary)' }}>
-          Curated nuggets for your autonomous agent experiments.
+    <section className="banner dos-section">
+      <header className="dos-section" style={{ margin: 0 }}>
+        <h2 style={{ margin: 0 }}>Weekly Highlights</h2>
+        <p className="dos-notice" style={{ margin: 0 }}>
+          Curated morsels for your autonomous agent experiments.
         </p>
       </header>
-      <div style={{ display: 'grid', gap: '1.5rem', gridTemplateColumns: 'repeat(auto-fit, minmax(260px, 1fr))' }}>
-        <div className="terminal-panel">
+      <div className="featured-grid">
+        <div className="terminal-panel featured-terminal">
           <div className="terminal-header">
-            <span className="terminal-light" style={{ background: '#ff5f56' }} />
-            <span className="terminal-light" style={{ background: '#ffbd2f' }} />
-            <span className="terminal-light" style={{ background: '#27c93f' }} />
-            <span style={{ marginLeft: '1rem', fontSize: '0.85rem', letterSpacing: '0.08em' }}>agent.md spotlight</span>
+            <span>AGENT.MD SPOTLIGHT</span>
           </div>
-          <div className="terminal-body">
+          <div className="terminal-body" style={{ display: 'grid', gap: '0.8rem' }}>
             {agent ? (
-              <div style={{ display: 'grid', gap: '0.6rem' }}>
-                <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <>
+                <div style={{ display: 'flex', justifyContent: 'space-between', gap: '1rem', flexWrap: 'wrap' }}>
                   <strong>{agent.title}</strong>
                   <RatingStars rating={agent.ratingAverage} count={agent.ratingCount} compact />
                 </div>
-                <p style={{ margin: 0, color: 'var(--text-secondary)' }}>{agent.description || 'No description provided.'}</p>
+                <p className="dos-notice" style={{ margin: 0 }}>
+                  {agent.description || 'No description provided.'}
+                </p>
                 <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
                   {agent.tags?.map((tag) => (
                     <span key={tag} className="tag">
@@ -35,19 +34,21 @@ export default function FeaturedShowcase({ featured }) {
                     </span>
                   ))}
                 </div>
-                <Link to={`/agent/${agent._id}`} className="neon-button" style={{ justifySelf: 'flex-start' }}>
+                <Link to={`/agent/${agent._id}`} className="dos-button" style={{ justifySelf: 'flex-start' }}>
                   Inspect agent.md
                 </Link>
-              </div>
+              </>
             ) : (
-              <p style={{ color: 'var(--text-secondary)' }}>No agents uploaded yet — upload one to be featured!</p>
+              <p className="dos-notice" style={{ margin: 0 }}>
+                No agents uploaded yet â€” add one to unlock the spotlight.
+              </p>
             )}
           </div>
         </div>
-        <div className="glass-panel" style={{ padding: '1rem', minHeight: '240px' }}>
-          <h3 style={{ marginTop: 0 }}>YouTube Deep Dive</h3>
+        <div className="glass-panel" style={{ padding: '1rem', display: 'grid', gap: '1rem' }}>
+          <h3 style={{ margin: 0 }}>Video Deep Dive</h3>
           {video ? (
-            <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, borderRadius: '14px', overflow: 'hidden' }}>
+            <div style={{ position: 'relative', paddingBottom: '56.25%', height: 0, overflow: 'hidden', border: '2px solid var(--accent)' }}>
               <iframe
                 src={video.embedUrl}
                 title="YouTube video of the week"
@@ -57,8 +58,8 @@ export default function FeaturedShowcase({ featured }) {
               />
             </div>
           ) : (
-            <p style={{ color: 'var(--text-secondary)' }}>
-              Add a list of YouTube video IDs in `YOUTUBE_VIDEO_IDS` to spotlight a weekly tutorial.
+            <p className="dos-notice" style={{ margin: 0 }}>
+              Add YouTube IDs to <code>YOUTUBE_VIDEO_IDS</code> to showcase tutorials.
             </p>
           )}
         </div>

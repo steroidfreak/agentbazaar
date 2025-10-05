@@ -29,18 +29,18 @@ export default function HomePage() {
   }, []);
 
   if (loading) {
-    return <LoadingState label="Spinning up the bazaar..." />;
+    return <LoadingState label="Spinning up the bazaar" />;
   }
 
   return (
     <main>
       <FeaturedShowcase featured={featured} />
-      <section style={{ marginBottom: '2.5rem', display: 'grid', gap: '1.5rem' }}>
-        <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <div>
-            <h2 style={{ marginBottom: '0.3rem' }}>Popular this week</h2>
-            <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Top-downloaded agent.md files from the community.</p>
-          </div>
+      <section className="glass-panel dos-section">
+        <header>
+          <h2 style={{ marginBottom: '0.3rem' }}>Popular this week</h2>
+          <p className="dos-notice" style={{ margin: 0 }}>
+            Top-downloaded agent.md files from the community.
+          </p>
         </header>
         <div className="card-grid">
           {popular.map((agent) => (

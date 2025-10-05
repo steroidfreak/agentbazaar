@@ -59,42 +59,43 @@ export default function UploadPage() {
 
   return (
     <main>
-      <section className="glass-panel" style={{ padding: '2rem', display: 'grid', gap: '1.5rem' }}>
+      <section className="glass-panel dos-section">
         <header>
           <h1 style={{ margin: 0 }}>Upload agent.md</h1>
-          <p style={{ margin: '0.4rem 0', color: 'var(--text-secondary)' }}>
+          <p className="dos-notice" style={{ margin: '0.4rem 0' }}>
             Share your orchestrations and empower the community. Markdown only.
           </p>
         </header>
-        <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1.2rem' }}>
-          <label style={{ display: 'grid', gap: '0.6rem' }}>
+        <form onSubmit={handleSubmit} className="dos-section">
+          <label className="dos-section" style={{ gap: '0.4rem' }}>
             <span>Title</span>
             <input name="title" value={form.title} onChange={handleChange} required maxLength={120} />
           </label>
-          <label style={{ display: 'grid', gap: '0.6rem' }}>
+          <label className="dos-section" style={{ gap: '0.4rem' }}>
             <span>Description</span>
             <textarea name="description" value={form.description} onChange={handleChange} maxLength={400} rows={3} />
           </label>
-          <label style={{ display: 'grid', gap: '0.6rem' }}>
+          <label className="dos-section" style={{ gap: '0.4rem' }}>
             <span>Tags (comma separated)</span>
             <input name="tags" value={form.tags} onChange={handleChange} placeholder="search, retrieval, langchain" />
           </label>
-          <label style={{ display: 'grid', gap: '0.6rem' }}>
+          <label className="dos-section" style={{ gap: '0.4rem' }}>
             <span>agent.md file</span>
             <input type="file" accept=".md,text/markdown" onChange={handleFile} required />
           </label>
-          <button type="submit" className="neon-button" style={{ justifySelf: 'flex-start' }}>
+          <button type="submit" className="dos-button" style={{ justifySelf: 'flex-start' }}>
             Upload to Bazaar
           </button>
-          {status && <span style={{ color: status.includes('fail') ? 'var(--danger)' : 'var(--success)' }}>{status}</span>}
+          {status && (
+            <span style={{ color: status.includes('fail') ? 'var(--danger)' : 'var(--success)' }}>{status}</span>
+          )}
         </form>
       </section>
 
       {preview && (
         <section className="terminal-panel" style={{ marginTop: '2rem' }}>
           <div className="terminal-header">
-            <span className="terminal-light" style={{ background: '#00ffd5' }} />
-            <span style={{ marginLeft: '0.6rem' }}>Preview</span>
+            <span>PREVIEW</span>
           </div>
           <pre className="terminal-body" style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word' }}>
             {preview}

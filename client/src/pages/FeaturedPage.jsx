@@ -28,16 +28,18 @@ export default function FeaturedPage() {
   }, []);
 
   if (loading) {
-    return <LoadingState label="Picking highlights..." />;
+    return <LoadingState label="Picking highlights" />;
   }
 
   return (
     <main>
       <FeaturedShowcase featured={featured} />
-      <section style={{ display: 'grid', gap: '1.5rem' }}>
+      <section className="glass-panel dos-section">
         <header>
           <h2 style={{ marginBottom: '0.3rem' }}>Hall of Fame</h2>
-          <p style={{ margin: 0, color: 'var(--text-secondary)' }}>Best-rated agent.md files of the week.</p>
+          <p className="dos-notice" style={{ margin: 0 }}>
+            Best-rated agent.md files of the week.
+          </p>
         </header>
         <div className="card-grid">
           {topRated.map((agent) => (
