@@ -1,5 +1,6 @@
 import { Link, NavLink, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
+import DesignSelector from './DesignSelector.jsx';
 
 export default function Navbar() {
   const { isAuthenticated, logout, user } = useAuth();
@@ -21,29 +22,34 @@ export default function Navbar() {
       </Link>
 
       <nav className="dos-nav">
-        <NavLink to="/library" className={navLinkClass}>
-          Library
-        </NavLink>
-        <NavLink to="/featured" className={navLinkClass}>
-          Highlights
-        </NavLink>
-        {isAuthenticated ? (
-          <>
-            <NavLink to="/upload" className={navButtonClass}>
-              Upload
-            </NavLink>
-            <NavLink to="/dashboard" className={navLinkClass}>
-              @{user?.username ?? 'user'}
-            </NavLink>
-            <button type="button" onClick={handleLogout} className="dos-button dos-button--danger">
-              Logout
-            </button>
-          </>
-        ) : (
-          <NavLink to="/login" className={navButtonClass}>
-            Login / Join
+        <div className="dos-nav__group">
+          <NavLink to="/library" className={navLinkClass}>
+            Library
           </NavLink>
-        )}
+          <NavLink to="/featured" className={navLinkClass}>
+            Highlights
+          </NavLink>
+        </div>
+        <div className="dos-nav__group dos-nav__group--actions">
+          {isAuthenticated ? (
+            <>
+              <NavLink to="/upload" className={navButtonClass}>
+                Upload
+              </NavLink>
+              <NavLink to="/dashboard" className={navLinkClass}>
+                @{user?.username ?? 'user'}
+              </NavLink>
+              <button type="button" onClick={handleLogout} className="dos-button dos-button--danger">
+                Logout
+              </button>
+            </>
+          ) : (
+            <NavLink to="/login" className={navButtonClass}>
+              Login / Join
+            </NavLink>
+          )}
+          <DesignSelector />
+        </div>
       </nav>
     </header>
   );
