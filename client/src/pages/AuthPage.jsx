@@ -35,41 +35,45 @@ export default function AuthPage() {
 
   return (
     <main>
-      <section className="glass-panel" style={{ padding: '2.2rem', display: 'grid', gap: '1.6rem', maxWidth: '460px', margin: '0 auto' }}>
+      <section className="glass-panel dos-section" style={{ maxWidth: '460px', margin: '0 auto' }}>
         <header style={{ textAlign: 'center' }}>
-          <h1>{isRegister ? 'Join AgentBazaar' : 'Welcome back, Operator'}</h1>
-          <p style={{ color: 'var(--text-secondary)' }}>
-            {isRegister ? 'Create an account to upload and curate agent.md playbooks.' : 'Sign in to manage your agents and community feedback.'}
+          <h1>{isRegister ? 'Join AgentBazaar' : 'Operator Login'}</h1>
+          <p className="dos-notice" style={{ margin: 0 }}>
+            {isRegister
+              ? 'Create an account to upload and curate agent.md playbooks.'
+              : 'Sign in to manage your agents and community feedback.'}
           </p>
         </header>
-        <form onSubmit={handleSubmit} style={{ display: 'grid', gap: '1.1rem' }}>
+        <form onSubmit={handleSubmit} className="dos-section">
           {isRegister && (
-            <label style={{ display: 'grid', gap: '0.5rem' }}>
+            <label className="dos-section" style={{ gap: '0.4rem' }}>
               <span>Username</span>
               <input name="username" value={form.username} onChange={handleChange} required={isRegister} />
             </label>
           )}
-          <label style={{ display: 'grid', gap: '0.5rem' }}>
+          <label className="dos-section" style={{ gap: '0.4rem' }}>
             <span>Email</span>
             <input type="email" name="email" value={form.email} onChange={handleChange} required />
           </label>
-          <label style={{ display: 'grid', gap: '0.5rem' }}>
+          <label className="dos-section" style={{ gap: '0.4rem' }}>
             <span>Password</span>
             <input type="password" name="password" value={form.password} onChange={handleChange} minLength={6} required />
           </label>
           {error && <span style={{ color: 'var(--danger)' }}>{error}</span>}
-          <button type="submit" className="neon-button" style={{ justifyContent: 'center' }}>
+          <button type="submit" className="dos-button">
             {isRegister ? 'Create account' : 'Login'}
           </button>
         </form>
         <button
+          type="button"
           onClick={() => {
             setMode(isRegister ? 'login' : 'register');
             setError('');
           }}
-          style={{ background: 'transparent', border: 'none', color: 'var(--accent)', cursor: 'pointer' }}
+          className="dos-link"
+          style={{ border: '1px solid var(--accent)', alignSelf: 'center' }}
         >
-          {isRegister ? 'Have an account? Login instead.' : "Need an account? Register now."}
+          {isRegister ? 'Have an account? Login instead.' : 'Need an account? Register now.'}
         </button>
       </section>
     </main>

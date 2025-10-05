@@ -50,10 +50,10 @@ export default function LibraryPage() {
 
   return (
     <main>
-      <section className="glass-panel" style={{ padding: '1.8rem', marginBottom: '2rem', display: 'grid', gap: '1rem' }}>
+      <section className="glass-panel dos-section">
         <header>
           <h1 style={{ margin: 0 }}>Agent Library</h1>
-          <p style={{ margin: '0.4rem 0', color: 'var(--text-secondary)' }}>
+          <p className="dos-notice" style={{ margin: '0.4rem 0' }}>
             Browse, search, and remix agent playbooks contributed by the community.
           </p>
         </header>
@@ -63,20 +63,21 @@ export default function LibraryPage() {
           value={query}
           onChange={(event) => setQuery(event.target.value)}
         />
-        {message && <span style={{ color: 'var(--success)' }}>{message}</span>}
+        {message && <span style={{ color: message.includes('fail') ? 'var(--danger)' : 'var(--success)' }}>{message}</span>}
       </section>
 
       {loading ? (
-        <LoadingState label="Indexing agents..." />
+        <LoadingState label="Indexing agents" />
       ) : (
         <div className="card-grid">
           {agents.map((agent) => (
             <div key={agent._id} style={{ position: 'relative' }}>
               <AgentCard agent={agent} />
               <button
-                className="neon-button"
-                style={{ position: 'absolute', top: '1.4rem', right: '1.4rem', padding: '0.35rem 0.9rem', fontSize: '0.75rem' }}
+                className="dos-button"
+                style={{ position: 'absolute', top: '1.4rem', right: '1.4rem', fontSize: '0.75rem', padding: '0.4rem 0.9rem' }}
                 onClick={() => handleCopy(agent._id)}
+                type="button"
               >
                 Copy agent.md
               </button>
@@ -85,7 +86,7 @@ export default function LibraryPage() {
         </div>
       )}
 
-      <div style={{ marginTop: '2.5rem' }}>
+      <div>
         <AdSlot label="Sponsored Tools" />
       </div>
     </main>
