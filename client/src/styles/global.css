@@ -115,6 +115,11 @@ main {
   padding: 2.2rem 2rem 2.4rem;
 }
 
+.hero-header {
+  display: grid;
+  gap: 0.75rem;
+}
+
 .hero-header > h1 {
   font-size: clamp(2rem, 4vw, 2.6rem);
   margin: 0;
@@ -168,6 +173,26 @@ main {
 @media (min-width: 820px) {
   .hero-grid {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 700px) {
+  .hero-section {
+    padding: 1.8rem 1.2rem 2.2rem;
+  }
+
+  .hero-header {
+    text-align: center;
+    justify-items: center;
+  }
+
+  .hero-header > .dos-notice {
+    margin: 0;
+  }
+
+  .hero-grid {
+    margin: 0 auto;
+    width: min(100%, 32rem);
   }
 }
 
