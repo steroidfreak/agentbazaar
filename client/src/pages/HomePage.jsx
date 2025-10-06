@@ -34,6 +34,47 @@ export default function HomePage() {
 
   return (
     <main>
+      <section className="glass-panel dos-section hero-section">
+        <header className="dos-section hero-header">
+          <span className="tag">New here?</span>
+          <h1>Why Choose AgentBazaar.net?</h1>
+          <p className="dos-notice">
+            AgentBazaar.net gives you a purpose-built home for every agents.md file, so the community can discover,
+            collaborate on, and reuse the work you publish.
+          </p>
+        </header>
+        <div className="hero-grid">
+          <article className="hero-card">
+            <h3>The Problem with Scattered Agent Files</h3>
+            <p>
+              Many users store their agents.md files in Notion, personal drives, or other apps, which makes it tough to track
+              where each file lives or share them quickly with collaborators.
+            </p>
+          </article>
+          <article className="hero-card">
+            <h3>The AgentBazaar.net Solution</h3>
+            <p>
+              AgentBazaar.net brings every agent into a single, organized repository that is tailored to agents.md files—no more
+              juggling disparate storage tools.
+            </p>
+          </article>
+          <article className="hero-card">
+            <h3>Key Benefits</h3>
+            <ul>
+              <li>
+                <strong>Centralized Storage:</strong> Keep all your agents in one place and access them whenever inspiration
+                strikes.
+              </li>
+              <li>
+                <strong>Community Sharing:</strong> Publish and discover helpful agents from creators across the community.
+              </li>
+              <li>
+                <strong>Built for Agents:</strong> Manage agents.md files with features crafted specifically for this workflow.
+              </li>
+            </ul>
+          </article>
+        </div>
+      </section>
       <FeaturedShowcase featured={featured} />
       <section className="glass-panel dos-section">
         <header>
