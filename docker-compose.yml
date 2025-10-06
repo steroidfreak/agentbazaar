@@ -38,6 +38,7 @@ services:
     environment:
       <<: *common-node-env
       PORT: ${API_PORT}
+      APP_DOMAIN: ${APP_DOMAIN}
     volumes:
       - ./server/uploads:/app/uploads
     expose:

@@ -21,41 +21,55 @@ const allowedOrigins = new Set([
   'http://127.0.0.1:5173'
 ]);
 
-const envOrigins = (process.env.CORS_ALLOW_ORIGINS ?? '')
-  .split(',')
-  .map((value) => value.trim())
-  .filter(Boolean);
+const parseList = (value = '') =>
+  value
+    .split(',')
+    .map((entry) => entry.trim())
+    .filter(Boolean);
 
-for (const origin of envOrigins) {
+for (const origin of parseList(process.env.CORS_ALLOW_ORIGINS)) {
   allowedOrigins.add(origin);
 }
 
-const normalizedDomain = process.env.APP_DOMAIN
-  ? process.env.APP_DOMAIN.replace(/^https?:\/\/, '').trim()
-  : '';
+const domainCandidates = new Set([
+  process.env.APP_DOMAIN,
+  ...parseList(process.env.APP_DOMAINS),
+  ...parseList(process.env.APP_ALT_DOMAIN),
+  'agentbazaar.net',
+  'www.agentbazaar.net'
+]);
 
-if (normalizedDomain) {
-  allowedOrigins.add(`https://${normalizedDomain}`);
-  allowedOrigins.add(`http://${normalizedDomain}`);
-  if (normalizedDomain.startsWith('www.')) {
-    const apexDomain = normalizedDomain.replace(/^www\./, '');
-    if (apexDomain) {
-      allowedOrigins.add(`https://${apexDomain}`);
-      allowedOrigins.add(`http://${apexDomain}`);
-    }
+const normalizeDomain = (value) =>
+  value
+    ?.replace(/^https?:\/\//, '')
+    .replace(/\/+$/, '')
+    .trim();
+
+const addDomainVariants = (domain) => {
+  const normalized = normalizeDomain(domain);
+  if (!normalized) {
+    return;
   }
-}
 
-allowedOrigins.add('https://agentbazaar.net');
-allowedOrigins.add('http://agentbazaar.net');
+  const variants = new Set([normalized]);
 
-const extraAltOrigins = (process.env.APP_ALT_DOMAIN ?? '')
-  .split(',')
-  .map((value) => value.trim())
-  .filter(Boolean);
+  if (normalized.startsWith('www.')) {
+    const apex = normalized.replace(/^www\./, '');
+    if (apex) {
+      variants.add(apex);
+    }
+  } else {
+    variants.add(`www.${normalized}`);
+  }
 
-for (const origin of extraAltOrigins) {
-  allowedOrigins.add(origin);
+  for (const variant of variants) {
+    allowedOrigins.add(`https://${variant}`);
+    allowedOrigins.add(`http://${variant}`);
+  }
+};
+
+for (const candidate of domainCandidates) {
+  addDomainVariants(candidate);
 }
 
 const corsOptions = {
@@ -88,5 +102,4 @@ app.use(notFound);
 app.use(errorHandler);
 
 export default app;
-
 
