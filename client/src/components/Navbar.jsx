@@ -1,14 +1,36 @@
-import { Link, NavLink, useNavigate } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { Link, NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext.jsx';
 import DesignSelector from './DesignSelector.jsx';
 
 export default function Navbar() {
   const { isAuthenticated, logout, user } = useAuth();
   const navigate = useNavigate();
+  const location = useLocation();
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+
+  useEffect(() => {
+    setIsMenuOpen(false);
+  }, [location.pathname]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 720) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
 
   const handleLogout = () => {
     logout();
     navigate('/login');
+  };
+
+  const toggleMenu = () => {
+    setIsMenuOpen((current) => !current);
   };
 
   const navLinkClass = ({ isActive }) => `dos-link${isActive ? ' dos-link--active' : ''}`;
@@ -16,12 +38,23 @@ export default function Navbar() {
 
   return (
     <header className="glass-panel dos-navbar">
-      <Link to="/" className="dos-brand">
-        <span>AgentBazaar</span>
-        <span className="dos-badge">v1</span>
-      </Link>
+      <div className="dos-navbar__brand">
+        <Link to="/" className="dos-brand">
+          <span>AgentBazaar</span>
+          <span className="dos-badge">v1</span>
+        </Link>
+        <button
+          type="button"
+          className="dos-navbar__toggle"
+          onClick={toggleMenu}
+          aria-expanded={isMenuOpen}
+          aria-controls="primary-navigation"
+        >
+          Menu
+        </button>
+      </div>
 
-      <nav className="dos-nav">
+      <nav id="primary-navigation" className={`dos-nav${isMenuOpen ? ' is-open' : ''}`}>
         <div className="dos-nav__group">
           <NavLink to="/library" className={navLinkClass}>
             Library

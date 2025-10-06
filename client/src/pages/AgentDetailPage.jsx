@@ -171,7 +171,7 @@ export default function AgentDetailPage() {
           <div className="terminal-header">
             <span>AGENT.MD</span>
           </div>
-          <pre className="terminal-body" style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word', maxHeight: '520px', overflowY: 'auto' }}>
+          <pre className="terminal-body" style={{ whiteSpace: 'pre-wrap', overflowWrap: 'break-word', maxHeight: 'min(520px, 65vh)', overflowY: 'auto' }}>
             {agent.content}
           </pre>
         </div>
@@ -207,3 +207,4 @@ export default function AgentDetailPage() {
     </main>
   );
 }
+

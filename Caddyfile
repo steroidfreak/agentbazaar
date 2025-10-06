@@ -2,7 +2,7 @@
   email {$ACME_EMAIL}
 }
 
-{$APP_DOMAIN} {
+{$APP_DOMAIN} agentbazaar.net {
   encode gzip zstd
 
   @api path /api/*

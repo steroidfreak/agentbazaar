@@ -424,6 +424,31 @@ main {
   justify-content: space-between;
   gap: 1.5rem;
 }
+.dos-navbar__brand {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  width: 100%;
+}
+
+.dos-navbar__toggle {
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0.45rem 0.8rem;
+  background: var(--bg-elevated);
+  border: 2px solid var(--accent);
+  color: var(--text-primary);
+  text-transform: uppercase;
+  letter-spacing: 0.12em;
+  cursor: pointer;
+}
+
+.dos-navbar__toggle:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: 2px;
+}
 
 .dos-brand {
   display: inline-flex;
@@ -460,19 +485,42 @@ main {
 }
 
 @media (max-width: 720px) {
-  .dos-nav {
+  .dos-navbar {
     flex-direction: column;
     align-items: stretch;
   }
 
+  .dos-navbar__brand {
+    width: 100%;
+  }
+
+  .dos-navbar__toggle {
+    display: inline-flex;
+  }
+
+  .dos-nav {
+    display: none;
+    width: 100%;
+  }
+
+  .dos-nav.is-open {
+    display: grid;
+    gap: 0.9rem;
+  }
+
   .dos-nav__group {
-    justify-content: flex-start;
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .dos-nav__group > * {
+    width: 100%;
   }
 
   .dos-nav__group--actions {
     margin-left: 0;
     justify-content: flex-start;
-    gap: 0.75rem;
   }
 }
 
@@ -536,6 +584,32 @@ main {
   flex-wrap: wrap;
 }
 
+.agent-card__heading {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.agent-card__title {
+  font-size: 1.2rem;
+  color: inherit;
+}
+
+.agent-card__title:hover {
+  color: var(--accent);
+}
+
+.agent-card__tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.agent-card__actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  justify-content: flex-end;
+}
 .agent-card__meta {
   display: flex;
   flex-wrap: wrap;
@@ -693,3 +767,32 @@ main {
 .dos-metric__value {
   font-size: 1.6rem;
 }
+
+@media (max-width: 600px) {
+  main {
+    padding: 0 1rem 2.5rem;
+    gap: 1.6rem;
+  }
+
+  .dos-navbar {
+    margin: 1rem auto 0;
+    padding: 0.8rem 1rem;
+  }
+
+  .agent-card__footer {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 0.75rem;
+  }
+
+  .agent-card__actions {
+    justify-content: flex-start;
+  }
+
+  .agent-card__stats {
+    justify-content: space-between;
+    width: 100%;
+  }
+}
+
+

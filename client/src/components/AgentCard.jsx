@@ -5,8 +5,8 @@ export default function AgentCard({ agent, actions = null }) {
   return (
     <article className="glass-panel agent-card">
       <div className="agent-card__header">
-        <div>
-          <Link to={`/agent/${agent._id}`} style={{ fontSize: '1.2rem' }}>
+        <div className="agent-card__heading">
+          <Link to={`/agent/${agent._id}`} className="agent-card__title">
             {agent.title}
           </Link>
           <div className="agent-card__meta">
@@ -19,7 +19,7 @@ export default function AgentCard({ agent, actions = null }) {
 
       {agent.description && <p className="dos-notice">{agent.description}</p>}
 
-      <div style={{ display: 'flex', flexWrap: 'wrap', gap: '0.4rem' }}>
+      <div className="agent-card__tags">
         {agent.tags?.length ? (
           agent.tags.map((tag) => (
             <span key={tag} className="tag">
@@ -38,7 +38,7 @@ export default function AgentCard({ agent, actions = null }) {
           <span>Views: {agent.views ?? 0}</span>
           <span>Copies: {agent.copyCount ?? 0}</span>
         </div>
-        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+        <div className="agent-card__actions">
           {actions}
           <Link to={`/agent/${agent._id}`} className="dos-button" style={{ fontSize: '0.85rem', padding: '0.5rem 1.1rem' }}>
             View Details
