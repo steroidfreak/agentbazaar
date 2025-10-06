@@ -6,7 +6,7 @@ const agentFileSchema = new mongoose.Schema(
       type: String,
       required: true,
       trim: true,
-      maxlength: 120
+      maxlength: 255
     },
     description: {
       type: String,
@@ -15,6 +15,12 @@ const agentFileSchema = new mongoose.Schema(
     tags: {
       type: [String],
       default: []
+    },
+    originalFilename: {
+      type: String,
+      required: true,
+      trim: true,
+      maxlength: 255
     },
     filePath: {
       type: String,

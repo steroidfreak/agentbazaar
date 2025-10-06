@@ -1,0 +1,26 @@
+{
+  email {$ACME_EMAIL}
+}
+
+{$APP_DOMAIN} {
+  encode gzip zstd
+
+  @api path /api/*
+  handle @api {
+    reverse_proxy web-backend:{$API_PORT}
+  }
+
+  @health path /health /api/health
+  handle @health {
+    reverse_proxy web-backend:{$API_PORT}
+  }
+
+  @uploads path /uploads/*
+  handle @uploads {
+    reverse_proxy web-backend:{$API_PORT}
+  }
+
+  handle {
+    reverse_proxy web-frontend:80
+  }
+}

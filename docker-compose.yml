@@ -1,0 +1,44 @@
+x-common-node-env: &common-node-env
+  NODE_ENV: ${NODE_ENV:-production}
+
+services:
+  caddy:
+    image: caddy:2.8-alpine
+    restart: unless-stopped
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      APP_DOMAIN: ${APP_DOMAIN}
+      ACME_EMAIL: ${ACME_EMAIL}
+      API_PORT: ${API_PORT}
+    volumes:
+      - ./Caddyfile:/etc/caddy/Caddyfile:ro
+      - ./caddy_data:/data
+      - ./caddy_config:/config
+    depends_on:
+      - web-frontend
+      - web-backend
+
+  web-frontend:
+    build:
+      context: ./client
+      dockerfile: Dockerfile
+    image: agentbazaar-frontend:latest
+    restart: unless-stopped
+
+  web-backend:
+    build:
+      context: ./server
+      dockerfile: Dockerfile
+    image: agentbazaar-backend:latest
+    restart: unless-stopped
+    env_file:
+      - ./server/.env
+    environment:
+      <<: *common-node-env
+      PORT: ${API_PORT}
+    volumes:
+      - ./server/uploads:/app/uploads
+    expose:
+      - "${API_PORT}"

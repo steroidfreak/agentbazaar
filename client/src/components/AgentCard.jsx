@@ -1,7 +1,7 @@
 import { Link } from 'react-router-dom';
 import RatingStars from './RatingStars.jsx';
 
-export default function AgentCard({ agent }) {
+export default function AgentCard({ agent, actions = null }) {
   return (
     <article className="glass-panel agent-card">
       <div className="agent-card__header">
@@ -38,9 +38,12 @@ export default function AgentCard({ agent }) {
           <span>Views: {agent.views ?? 0}</span>
           <span>Copies: {agent.copyCount ?? 0}</span>
         </div>
-        <Link to={`/agent/${agent._id}`} className="dos-button" style={{ fontSize: '0.85rem', padding: '0.5rem 1.1rem' }}>
-          View Details
-        </Link>
+        <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
+          {actions}
+          <Link to={`/agent/${agent._id}`} className="dos-button" style={{ fontSize: '0.85rem', padding: '0.5rem 1.1rem' }}>
+            View Details
+          </Link>
+        </div>
       </footer>
     </article>
   );

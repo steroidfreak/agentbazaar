@@ -49,20 +49,44 @@ A full-stack platform for uploading, sharing, rating, and copying `agent.md` fil
 - Backend: `npm run start` (after building your client). Deploy to Render, Railway, Fly.io, etc. Ensure the `uploads/` directory is writable or swap to object storage.
 - Frontend: `npm run build` inside `client/`. Deploy the generated `dist/` folder to Netlify, Vercel, Cloudflare Pages, etc. Configure `VITE_API_URL` at build time to point to your deployed API.
 
+## Docker deployment (single host)
+The repository ships with a Docker + Caddy stack wired for `www.agentbazaar.net`. Update the values in the root `.env` to match your domain and contact email before building.
+
+### 1. Prepare secrets and volumes
+- Copy `server/.env.example` to `server/.env` and populate the production values (MongoDB URI, JWT secret, OpenAI key, etc.). The file stays out of version control but is read by the backend container.
+- Review `.env` at the project root and set `ACME_EMAIL` to an inbox you monitor; Let's Encrypt uses it for renewal notices.
+- Ensure the host keeps `server/uploads/` (user content) plus `caddy_data/` and `caddy_config/` (TLS assets) on durable storage. Bind mounts are already defined via `docker-compose.yml`.
+
+### 2. Provision a DigitalOcean droplet
+```bash
+# Ubuntu 22.04 LTS example
+sudo apt update && sudo apt install -y docker.io docker-compose-plugin
+sudo usermod -aG docker $USER && newgrp docker
+
+# Clone or copy the repository, then inside /srv/agentbazaar (or similar):
+mkdir -p caddy_data caddy_config
+cp server/.env.example server/.env  # edit this file with real secrets
+nano .env                            # confirm domain + ACME email
+
+# Build and start the stack
+docker compose up -d --build
+```
+
+### 3. Post-deploy checks
+- `docker compose ps` should show `caddy`, `web-frontend`, and `web-backend` healthy.
+- Tail logs for the proxy and API: `docker compose logs -f caddy` and `docker compose logs -f web-backend`.
+- Verify HTTPS once DNS points at the droplet: `curl -I https://www.agentbazaar.net`.
+- Confirm the health endpoint: `curl https://www.agentbazaar.net/health` (or `/api/...` routes).
+- Uploaded markdown files persist under `server/uploads/` on the host; back them up or repoint to object storage for long-term retention.
+
 ## Deployment notes
 - Use HTTPS and secure cookies (configure reverse proxy) in production.
 - Set CORS origin to your frontend domain in `src/app.js` if you need stricter rules.
 - Configure Google AdSense or affiliate embed codes inside the `<AdSlot />` component.
-- For scheduled “agent of the week” rotations, run the API continuously; it caches and refreshes based on `FEATURED_REFRESH_HOURS`.
+- For scheduled "agent of the week" rotations, run the API continuously; it caches and refreshes based on `FEATURED_REFRESH_HOURS`.
 - Consider using MongoDB Atlas and a managed object store (S3/GCS) for uploaded files in production environments.
 
 ## Optional enhancements
 - Add email verification before allowing uploads.
 - Hook the copy/download analytics into a dashboard provider for richer charts.
 - Replace in-memory featured caching with Redis if you scale to multiple API instances.
-
-
-
-
-
-

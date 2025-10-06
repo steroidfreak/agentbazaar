@@ -7,12 +7,15 @@ import {
   uploadAgentFile,
   listAgentFiles,
   getAgentFile,
+  downloadAgentFile,
+  updateAgentFile,
   incrementView,
   incrementCopy,
   deleteAgentFile,
-  getUserDashboard
+  getUserDashboard,
+  adminListAgentFiles
 } from '../controllers/agentController.js';
-import { authenticate, optionalAuth } from '../middleware/auth.js';
+import { authenticate, optionalAuth, requireAdmin } from '../middleware/auth.js';
 
 const router = Router();
 
@@ -45,8 +48,11 @@ const upload = multer({
 
 router.get('/', optionalAuth, listAgentFiles);
 router.get('/dashboard/me', authenticate, getUserDashboard);
+router.get('/admin', authenticate, requireAdmin, adminListAgentFiles);
 router.post('/', authenticate, upload.single('file'), uploadAgentFile);
+router.get('/:id/download', optionalAuth, downloadAgentFile);
 router.get('/:id', optionalAuth, getAgentFile);
+router.patch('/:id', authenticate, upload.single('file'), updateAgentFile);
 router.post('/:id/views', optionalAuth, incrementView);
 router.post('/:id/copies', optionalAuth, incrementCopy);
 router.delete('/:id', authenticate, deleteAgentFile);

@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 import api from '../api/client.js';
 import CommentList from '../components/CommentList.jsx';
 import RatingStars from '../components/RatingStars.jsx';
@@ -8,7 +8,8 @@ import { useAuth } from '../context/AuthContext.jsx';
 
 export default function AgentDetailPage() {
   const { id } = useParams();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
+  const navigate = useNavigate();
   const [agent, setAgent] = useState(null);
   const [reviews, setReviews] = useState([]);
   const [status, setStatus] = useState('');
@@ -38,6 +39,48 @@ export default function AgentDetailPage() {
       setTimeout(() => setStatus(''), 3000);
     } catch (error) {
       setStatus('Copy failed.');
+    }
+  };
+
+  const downloadFile = async () => {
+    if (!agent) return;
+    let objectUrl = '';
+    try {
+      const response = await api.get(`/agent-files/${id}/download`, {
+        responseType: 'blob'
+      });
+      const blob = response.data instanceof Blob ? response.data : new Blob([response.data]);
+      objectUrl = window.URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = objectUrl;
+      link.download = agent.originalFilename || agent.title || 'agent.md';
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      setStatus('Download started.');
+      setTimeout(() => setStatus(''), 3000);
+    } catch (error) {
+      console.error('Download failed', error);
+      setStatus('Download failed.');
+    } finally {
+      if (objectUrl) {
+        window.URL.revokeObjectURL(objectUrl);
+      }
+    }
+  };
+
+  const deleteAgent = async () => {
+    if (!agent) return;
+    const confirmed = window.confirm('Delete this agent file permanently?');
+    if (!confirmed) {
+      return;
+    }
+    try {
+      await api.delete(`/agent-files/${id}`);
+      navigate('/dashboard');
+    } catch (error) {
+      console.error('Delete failed', error);
+      setStatus(error.response?.data?.message ?? 'Delete failed.');
     }
   };
 
@@ -81,6 +124,13 @@ export default function AgentDetailPage() {
     return <LoadingState label="Retrieving agent dossier" />;
   }
 
+  const viewerId = user?._id ?? user?.id;
+  const ownerId = agent.owner?._id ?? agent.owner?.id;
+  const isOwner = Boolean(viewerId && ownerId && viewerId === ownerId);
+  const isAdmin = user?.role === 'admin';
+  const canManage = Boolean(user && (isOwner || isAdmin));
+  const statusIsError = /fail|error|denied|permission|unauthorized/i.test(status);
+
   return (
     <main>
       <section className="glass-panel dos-section">
@@ -92,9 +142,29 @@ export default function AgentDetailPage() {
               <span>{new Date(agent.createdAt).toLocaleString()}</span>
             </div>
           </div>
-          <button type="button" onClick={copyToClipboard} className="dos-button">
-            Copy
-          </button>
+          <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
+            <button type="button" onClick={copyToClipboard} className="dos-button">
+              Copy
+            </button>
+            <button type="button" onClick={downloadFile} className="dos-button">
+              Download
+            </button>
+            {canManage && (
+              <>
+                <Link to={`/agent/${id}/edit`} className="dos-button">
+                  Edit
+                </Link>
+                <button
+                  type="button"
+                  onClick={deleteAgent}
+                  className="dos-button"
+                  style={{ backgroundColor: 'var(--danger)', borderColor: 'var(--danger)' }}
+                >
+                  Delete
+                </button>
+              </>
+            )}
+          </div>
         </header>
         <RatingStars rating={agent.ratingAverage} count={agent.ratingCount} />
         <div className="terminal-panel">
@@ -106,7 +176,7 @@ export default function AgentDetailPage() {
           </pre>
         </div>
         {status && (
-          <span style={{ color: status.includes('fail') ? 'var(--danger)' : 'var(--success)' }}>{status}</span>
+          <span style={{ color: statusIsError ? 'var(--danger)' : 'var(--success)' }}>{status}</span>
         )}
       </section>
 

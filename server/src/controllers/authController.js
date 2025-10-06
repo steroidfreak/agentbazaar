@@ -30,10 +30,12 @@ export async function register(req, res) {
     });
 
     const token = createToken(user._id);
+    const safeUser = user.toJSON();
+    safeUser.role ??= 'user';
 
     res.status(201).json({
       token,
-      user
+      user: safeUser
     });
   } catch (error) {
     console.error('Register error:', error.message);
@@ -61,8 +63,10 @@ export async function login(req, res) {
     }
 
     const token = createToken(user._id);
+    const safeUser = user.toJSON();
+    safeUser.role ??= 'user';
 
-    res.json({ token, user });
+    res.json({ token, user: safeUser });
   } catch (error) {
     console.error('Login error:', error.message);
     res.status(500).json({ message: 'Failed to log in' });
@@ -70,5 +74,12 @@ export async function login(req, res) {
 }
 
 export async function getProfile(req, res) {
-  res.json({ user: req.user });
+  if (!req.user) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+
+  const safeUser = typeof req.user.toJSON === 'function' ? req.user.toJSON() : req.user;
+  safeUser.role ??= 'user';
+
+  res.json({ user: safeUser });
 }

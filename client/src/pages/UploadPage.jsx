@@ -23,6 +23,8 @@ export default function UploadPage() {
   const handleFile = async (event) => {
     const selected = event.target.files?.[0];
     setFile(selected ?? null);
+    const nextTitle = selected ? selected.name : '';
+    setForm((prev) => ({ ...prev, title: nextTitle }));
     if (selected) {
       const text = await selected.text();
       setPreview(text.slice(0, 800));
@@ -40,7 +42,7 @@ export default function UploadPage() {
 
     try {
       const formData = new FormData();
-      formData.append('title', form.title);
+      formData.append('title', file.name);
       formData.append('description', form.description);
       formData.append('tags', form.tags);
       formData.append('file', file);
@@ -69,7 +71,13 @@ export default function UploadPage() {
         <form onSubmit={handleSubmit} className="dos-section">
           <label className="dos-section" style={{ gap: '0.4rem' }}>
             <span>Title</span>
-            <input name="title" value={form.title} onChange={handleChange} required maxLength={120} />
+            <input
+              name="title"
+              value={form.title}
+              readOnly
+              placeholder="Select a file to populate the title"
+            />
+            <span className="dos-notice">Matches the uploaded filename automatically.</span>
           </label>
           <label className="dos-section" style={{ gap: '0.4rem' }}>
             <span>Description</span>
