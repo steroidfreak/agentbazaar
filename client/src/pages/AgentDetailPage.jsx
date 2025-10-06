@@ -66,10 +66,10 @@ export default function AgentDetailPage() {
       setAgent((prev) =>
         prev
           ? {
-              ...prev,
-              ratingAverage: response.data.rating.ratingAverage,
-              ratingCount: response.data.rating.ratingCount
-            }
+            ...prev,
+            ratingAverage: response.data.rating.ratingAverage,
+            ratingCount: response.data.rating.ratingCount
+          }
           : prev
       );
     } catch (error) {
@@ -93,7 +93,7 @@ export default function AgentDetailPage() {
             </div>
           </div>
           <button type="button" onClick={copyToClipboard} className="dos-button">
-            Copy agent.md
+            Copy
           </button>
         </header>
         <RatingStars rating={agent.ratingAverage} count={agent.ratingCount} />
