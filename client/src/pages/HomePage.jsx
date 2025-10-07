@@ -89,7 +89,20 @@ export default function HomePage() {
           ))}
         </div>
       </section>
-      <AdSlot label="728x90 Leaderboard" />
+      <AdSlot label="728x90 Leaderboard">
+        <a href="https://www.workflow.sg" target="_blank" rel="noopener noreferrer" aria-label="Need to automate your workflow?">
+          <pre>
+            {String.raw`
+ __        __   _                          _                  
+ \ \      / /__| | ___ ___  _ __ ___   ___| |_ _   _ _ __ ___ 
+  \ \ /\ / / _ \ |/ __/ _ \| '_ \  _ \ / _ \ __| | | | '__/ _ \
+   \ V  V /  __/ | (_| (_) | | | | | |  __/ |_| |_| | | |  __/
+    \_/\_/ \___|_|\___\___/|_| |_| |_|\___|\__|\__,_|_|  \___|
+`}
+          </pre>
+          <span className="ad-tagline">Need to automate your workflow?</span>
+        </a>
+      </AdSlot>
     </main>
   );
 }
